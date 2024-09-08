@@ -1,20 +1,33 @@
+import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
+import { JobService } from "./job.service";
 import { Job } from "./entities/job.entitites";
-import { Resolver, Query } from "@nestjs/graphql";
+
 @Resolver(() => Job)
 export class JobResolver {
+  constructor(private readonly jobService: JobService) {}
+
   @Query(() => [Job], { name: "jobs" })
-  getJobs(): Job[] {
-    return [
-      {
-        id: 1,
-        title: "Software Developer",
-        description: "Develops software solutions.",
-      },
-      {
-        id: 2,
-        title: "Project Manager",
-        description: "Manages project timelines and deliverables.",
-      },
-    ];
+  async getAllJobs(): Promise<Job[]> {
+    return this.jobService.getAllJobs();
   }
+  @Query(() => Job, { name: "job" })
+  async getJobById(@Args("id", { type: () => Int }) id: number): Promise<Job> {
+    return this.jobService.getJobById(id);
+  }
+
+  /* @Mutation(() => Job)
+  async createJob(
+    @Args("title") title: string,
+    @Args("description") description: string,
+  ): Promise<Job> {
+    return this.jobService.createJob({
+      title,
+      description,
+    });
+  } */
+
+  /* @Mutation(() => Job)
+  async deleteJob(@Args("id", { type: () => Int }) id: number): Promise<Job> {
+    return this.jobService.deleteJob(id);
+  } */
 }
