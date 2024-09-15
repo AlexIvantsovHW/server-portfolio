@@ -3,10 +3,9 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { GraphQLModule } from "@nestjs/graphql";
-
-import { join } from "path";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { JobModule } from "./job/job.module";
+import { JobModule } from "./job";
+import { ProjectsModule } from "./projects";
 
 @Module({
   imports: [
@@ -18,9 +17,10 @@ import { JobModule } from "./job/job.module";
       password: "qwerty12345",
       database: "portfolio",
       autoLoadEntities: true,
-      synchronize: true, // Note: Set to `false` in production
+      synchronize: true,
     }),
     JobModule,
+    ProjectsModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,

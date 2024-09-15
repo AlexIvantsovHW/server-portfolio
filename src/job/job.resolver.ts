@@ -10,24 +10,19 @@ export class JobResolver {
   async getAllJobs(): Promise<Job[]> {
     return this.jobService.getAllJobs();
   }
+
   @Query(() => Job, { name: "job" })
   async getJobById(@Args("id", { type: () => Int }) id: number): Promise<Job> {
     return this.jobService.getJobById(id);
   }
 
-  /* @Mutation(() => Job)
-  async createJob(
-    @Args("title") title: string,
-    @Args("description") description: string,
+  @Mutation(() => Job, { name: "updateJob" })
+  async updateJobById(
+    @Args("id", { type: () => Int }) id: number,
+    @Args("title", { type: () => String }) title: string,
+    @Args("description", { type: () => String }) description: string,
   ): Promise<Job> {
-    return this.jobService.createJob({
-      title,
-      description,
-    });
-  } */
-
-  /* @Mutation(() => Job)
-  async deleteJob(@Args("id", { type: () => Int }) id: number): Promise<Job> {
-    return this.jobService.deleteJob(id);
-  } */
+    const updatedData: Partial<Job> = { title, description };
+    return this.jobService.updateJobById(id, updatedData);
+  }
 }

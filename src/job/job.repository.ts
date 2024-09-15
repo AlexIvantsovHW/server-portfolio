@@ -10,32 +10,23 @@ export class JobsRepository {
     private jobsOrmRepository: Repository<Job>,
   ) {}
 
-  // Создание нового объекта Job
-  /*   create(job: Partial<Job>): Job {
-    return this.jobsOrmRepository.create(job);
-  } */
-
-  // Сохранение объекта Job
-  /* async save(job: Job): Promise<Job> {
-    return this.jobsOrmRepository.save(job);
-  } */
-
-  // Поиск всех объектов Job
   async findAll(): Promise<Job[]> {
     return this.jobsOrmRepository.find();
   }
 
-  // Поиск Job по ID
   async getJobById(id: number): Promise<Job> {
-    const job = await this.jobsOrmRepository.findOneBy({ id });
+    const job = await this.jobsOrmRepository.findOne({ where: { id } });
     if (!job) {
       throw new NotFoundException(`Job with id ${id} not found`);
     }
     return job;
   }
 
-  // Удаление Job
-  /*   async remove(job: Job): Promise<void> {
-    await this.jobsOrmRepository.remove(job);
-  } */
+  async updateJobById(id: number, updateData: Partial<Job>): Promise<Job> {
+    const job = await this.getJobById(id);
+    this.jobsOrmRepository.merge(job, updateData);
+    const updatedJob = await this.jobsOrmRepository.save(job);
+
+    return updatedJob;
+  }
 }
